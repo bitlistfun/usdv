@@ -300,6 +300,18 @@ curl -XPOST --url http://127.0.0.1:20002/api/tron/safe/safes/xxx/multisig-transa
 
 GET /api/[chain]/safe/safes/{address}/multisig-transactions/
 
+- req
+
+|  arg name   | type  | desc |
+|  ----  | ----  | ---- |
+| ordering | String | 按照指定字段排序 |
+| limit    | int | 每次请求返回数据项数量 |
+| offset   | int | 从记录索引指定位置开始读取 |
+| failed   | bool |  |
+| executed   | bool |  |
+| has_confirmations   | bool |  |
+| trusted   | bool |  |
+
 ## 查询所有已执行交易
 
 Returns all the executed transactions for a given Safe address.
