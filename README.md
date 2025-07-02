@@ -312,6 +312,7 @@ GET /api/[chain]/safe/safes/{address}/multisig-transactions/
 | executed   | bool |  |
 | has_confirmations   | bool |  |
 | trusted   | bool |  |
+| nonce__gte   | int |  |
 
 ## 查询所有已执行交易
 
