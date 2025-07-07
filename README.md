@@ -337,6 +337,12 @@ GET /api/[chain]/safe/safes/{address}/all-transactions/
 curl -X GET "http://127.0.0.1:20002/api/eth/safe/safes/0xd1Bacd07414C51aA16f4480B80f65a51d67D8fEe/all-transactions/?ordering=timestamp&limit=3&offset=0" \
     -H "Accept: application/json" \
     -H "content-type: application/json"
+
+# 波场查询历史（已上链）的多签交易信息，不支持 ordering
+
+curl -XGET --url "http://127.0.0.1:20002/api/tron/safe/safes/TESzMLyDLcA9qqYt1fDqtJEoUf5ZBh17a5/all-transactions/?limit=10&offset=0" \
+        --header 'accept: application/json' \
+        --header 'content-type: application/json'
 ```
 
 ## 估算多签交易费用
@@ -347,6 +353,12 @@ POST /api/[chain]/safe/safes/{address}/multisig-transactions/estimations/
 
 DELETE /api/[chain]/safe/multisig-transactions/{txhash}/
 
+- req
+
+|  arg name   | type  | desc |
+|  ----  | ----  | ---- |
+| status   | int | 1:交易已执行(已广播，不代表执行成功); 2:交易已撤销 |
+
 ```shell
 curl -XDELETE --url http://127.0.0.1:20002/api/tron/safe/multisig-transactions/xxx/ \
         --header 'accept: application/json' \
@@ -356,7 +368,14 @@ curl -XDELETE --url http://127.0.0.1:20002/api/tron/safe/multisig-transactions/x
 
 ## 查询多签交易信息
 
-GET /api/[chain]/safe/multisig-transactions/{txhash}/
+GET /api/[chain]/safe/multisig-transactions/{txhash}/?onchain=true
+
+- req
+
+|  arg name   | type  | desc |
+|  ----  | ----  | ---- |
+| onchain    | bool | 默认为false; false: 查询缓存交易; true: 查询交易（已上链）结果 |
+
 
 ```shell
 curl -XGET --url http://127.0.0.1:20002/api/tron/safe/multisig-transactions/xxx/ \
