@@ -71,7 +71,8 @@ curl "http://127.0.0.1:20002/stable/tron/config" -X GET -H "Content-Type: applic
       "BLACKLIST_ROLE": "0x22435ed027edf5f902dc0093fbc24cdb50c05b5fd5f311b78c67c1cbaff60e13",
       "DEFAULT_ADMIN_ROLE": "0x1effbbff9c66c5e59634f24fe842750c60d18891155c32dd155fc2d661a4c86d",
       "MINTER_ROLE": "0x9f2df0fed2c77648de5860a4cc508cd0818c85b8b8a1ab4ceeef8d981c8956a6",
-      "PAUSER_ROLE": "0x65d7a28e3265b37a6474929f336521b332c1681b933f6cb9f3376673440d862a"
+      "PAUSER_ROLE": "0x65d7a28e3265b37a6474929f336521b332c1681b933f6cb9f3376673440d862a",
+      "block_explorer": "https://nile.tronscan.org"
     },
     "safe": "TESzMLyDLcA9qqYt1fDqtJEoUf5ZBh17a5"
   },
@@ -336,6 +337,12 @@ GET /api/[chain]/safe/safes/{address}/all-transactions/
 curl -X GET "http://127.0.0.1:20002/api/eth/safe/safes/0xd1Bacd07414C51aA16f4480B80f65a51d67D8fEe/all-transactions/?ordering=timestamp&limit=3&offset=0" \
     -H "Accept: application/json" \
     -H "content-type: application/json"
+
+# 波场查询历史（已上链）的多签交易信息，不支持 ordering
+
+curl -XGET --url "http://127.0.0.1:20002/api/tron/safe/safes/TESzMLyDLcA9qqYt1fDqtJEoUf5ZBh17a5/all-transactions/?limit=10&offset=0" \
+        --header 'accept: application/json' \
+        --header 'content-type: application/json'
 ```
 
 ## 估算多签交易费用
@@ -346,6 +353,12 @@ POST /api/[chain]/safe/safes/{address}/multisig-transactions/estimations/
 
 DELETE /api/[chain]/safe/multisig-transactions/{txhash}/
 
+- req
+
+|  arg name   | type  | desc |
+|  ----  | ----  | ---- |
+| status   | int | 1:交易已执行(已广播，不代表执行成功); 2:交易已撤销 |
+
 ```shell
 curl -XDELETE --url http://127.0.0.1:20002/api/tron/safe/multisig-transactions/xxx/ \
         --header 'accept: application/json' \
@@ -355,7 +368,14 @@ curl -XDELETE --url http://127.0.0.1:20002/api/tron/safe/multisig-transactions/x
 
 ## 查询多签交易信息
 
-GET /api/[chain]/safe/multisig-transactions/{txhash}/
+GET /api/[chain]/safe/multisig-transactions/{txhash}/?onchain=true
+
+- req
+
+|  arg name   | type  | desc |
+|  ----  | ----  | ---- |
+| onchain    | bool | 默认为false; false: 查询缓存交易; true: 查询交易（已上链）结果 |
+
 
 ```shell
 curl -XGET --url http://127.0.0.1:20002/api/tron/safe/multisig-transactions/xxx/ \
@@ -442,19 +462,35 @@ curl -X GET http://127.0.0.1:20002/api/eth/info     -H "Accept: application/json
 {
   "code": 0,
   "data": {
-    "circulatingMarketCap": "100000000000000",
-    "circulatingSupply": "100000000000000",
-    "contract": "100000000000000",
-    "cumulativeTransfers": "100000000000000",
-    "decimal": "100000000000000",
-    "holders": "100000000000000",
-    "issuer": "100000000000000",
-    "issuingTime": "100000000000000",
-    "marketCap": "100000000000000",
-    "tag": "sample",
-    "totalSupply": "100000000000000",
-    "yesterdayTransfers": "100000000000000",
-    "yesterdaytradingVolume": "100000000000000"
+    "circulatingMarketCap": "200201022268199864",
+    "circulatingSupply": "200201022268199864",
+    "contract": "0x2fb07c66479cc5d45f8ca2db386b400453d78983",
+    "cumulativeTransfers": "36978",
+    "cumulativeTransfers_record": {
+      "day": "2025-12-31",
+      "transfers": "36978"
+    },
+    "decimal": "6",
+    "decimals": "6",
+    "holders": "178",
+    "holders_record": {
+      "day": "2025-12-31",
+      "holders": "178"
+    },
+    "issuer": "USD Vault",
+    "issuingTime": "Jun-05-2025 03:52:47 PM UTC",
+    "marketCap": "200201022268199864",
+    "totalSupply": "200201022268199864",
+    "yesterdayTransfers": "104",
+    "yesterdayTransfers_record": {
+      "day": "2025-12-31",
+      "transfers": "104"
+    },
+    "yesterdaytradingVolume": "145",
+    "yesterdaytradingVolume_record": {
+      "day": "2025-12-31",
+      "volume": "145"
+    }
   },
   "message": "success"
 }
